@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="css/L.Control.MousePosition.css" />
+        <link rel="stylesheet" href="css/leaflet.defaultextent.css" />
+        <link rel="stylesheet" href="css/leaflet-search.css" />
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+    integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+    integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+    crossorigin=""></script>
+        <script src="https://unpkg.com/esri-leaflet@2.1.1/dist/esri-leaflet.js"
+    integrity="sha512-ECQqaYZke9cSdqlFG08zSkudgrdF6I1d8ViSa7I3VIszJyVqw4ng1G8sehEXlumdMnFYfzY0tMgdQa4WCs9IUw=="
+    crossorigin=""></script>
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            position: relative;
+        }
+        </style>
+ 
+
+<title>KBK GIS</title>
+<link href="img/logo.png" rel="shortcut icon">
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/leaflet-tilelayer-wmts.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="js/L.Control.MousePosition.js"></script>
+        <script src="js/leaflet.defaultextent.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="js/leaflet.latlng-graticule.js"></script>
+        <script src="js/leaflet.ajax.js"></script>
+        
+        
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, defaultExtentControl:true, maxZoom:21, minZoom:2
+        }).setView([3.559083918348971, 116.9900333388535], 8);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('&copy; 2021 <b>Hamzah Imanul</b>');
+        var bounds_group = new L.featureGroup([]);
+        var basemap1 =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; 2021 <b>Hamzah Imanul</b>',
+            maxZoom: 29
+        });
+        basemap1.addTo(map);
+        var basemap2 = L.esri.basemapLayer('Imagery');
+        basemap2.addTo(map);
+        var basemap2 = L.esri.basemapLayer('ImageryLabels');
+        basemap2.addTo(map);
+        function setBounds() {
+        }
+        
+        var baseMaps = { 'Imagery': basemap2,'OSM': basemap1,};
+        L.control.layers(baseMaps,{},{collapsed:false}).addTo(map);
+
+        L.latlngGraticule({
+            showLabel: true,
+            zoomInterval: [
+                {start: 2, end: 3, interval: 30},
+                {start: 4, end: 4, interval: 10},
+                {start: 5, end: 7, interval: 5},
+                {start: 8, end: 8, interval: 1},
+                {start: 9, end: 9, interval: 0.5},
+                {start: 10, end: 13, interval: 0.25},
+            ]
+        }).addTo(map);
+
+        var myStyle_IA = {
+        "color": "#e74c3c",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_IB = {
+        "color": "#ffed4a",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_IP1 = {
+        "color": "#3490dc",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_IS = {
+        "color": "#adff2f",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_Route1 = {
+        "color": "#00b7eb",
+        "weight": 3,
+        "opacity": 0.65
+        };
+        var myStyle_Route2 = {
+        "color": "#008b8b",
+        "weight": 3,
+        "opacity": 0.65
+        };
+
+        var myStyle_Route3 = {
+        "color": "#00ffef",
+        "weight": 3,
+        "opacity": 0.65
+        };
+
+        var myStyle_KBK = {
+        "color": "#ff1493",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_KP = {
+        "color": "#8e44ad",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_RBM = {
+        "color": "#e67e22",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_Hub = {
+        "color": "yellow",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_Port = {
+        "color": "blue",
+        "weight": 2,
+        "opacity": 0.65
+        };
+
+        var myStyle_conveyor = {
+        "color": "orange",
+        "weight": 3,
+        "opacity": 0.65
+        };
+        
+        var myStyle_Haul = {
+        "color": "red",
+        "weight": 3,
+        "opacity": 0.65
+        };
+
+        var myStyle_MV = {
+        "color": "#9B26B6",
+        "weight": 3,
+        "opacity": 0.7,
+        };
+        // Polygon
+        function popUp(f,l){
+    var out = [];
+    if (f.properties){
+        for(key in f.properties){
+            out.push(key+": "+f.properties[key]);
+        }
+        l.bindPopup(out.join("<br />")).bindTooltip(f.properties.Code,{
+
+            direction : "center",
+            opacity : 0.9,
+        });
+    }
+}
+// var jsonTest = new L.GeoJSON.AJAX(["js/geojson/allall.geojson"],{onEachFeature:popUp}).addTo(map); 
+// var jsonTest2 = new L.GeoJSON.AJAX(["js/geojson/line.geojson"],{onEachFeature:popUp}).addTo(map); 
+// var jsonTest3 = new L.GeoJSON.AJAX(["js/geojson/point.geojson"],{onEachFeature:popUp}).addTo(map);
+
+// var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/baru.geojson"],{onEachFeature:popUp,style: myStyle}).addTo(map);
+
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/KBK.geojson"],{onEachFeature:popUp,style: myStyle_KBK}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Port.geojson"],{onEachFeature:popUp,style: myStyle_Port}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Hub.geojson"],{onEachFeature:popUp,style: myStyle_Hub}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Bargeroute.geojson"],{onEachFeature:popUp,style: myStyle_Route1}).addTo(map);
+// var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Route3.geojson"],{onEachFeature:popUp,style: myStyle_Route3}).addTo(map);
+// var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Route2.geojson"],{onEachFeature:popUp,style: myStyle_Route2}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/conveyor.geojson"],{onEachFeature:popUp,style: myStyle_conveyor}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Haul.geojson"],{onEachFeature:popUp,style: myStyle_Haul}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/MV.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/MVpoint.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/HaulingN.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/ConveyorN.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/Barge.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+var jsonTest1 = new L.GeoJSON.AJAX(["js/geojson/MVpoint.geojson"],{onEachFeature:popUp,style: myStyle_MV}).addTo(map);
+
+// var Polygon = L.Polygon (jsonTest1).addTo(map)
+// .bindPopup("<h5 style = 'text-align: center'> WEBGIS PEAKGLOBAL </h5> <img src='img/foto.jpg' width='200 px' /> <table><tr><tr><td>Location </td><td>: Peakglobal Office</td></tr><tr><td>Date </td><td>: 8 June 2021 </td></tr> </tr><tr><td>Duration </td><td>: 7 days </td></tr></tr><tr><td>Executor </td><td>: Hamzah Imanul Haq </td></tr></tr><tr><td>Information </td><td>: Tracking Webgis</td></tr></table>")
+
+
+    
+        </script>
+    </body>
+</html>
